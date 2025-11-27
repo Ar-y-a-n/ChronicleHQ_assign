@@ -1,0 +1,247 @@
+/* GLOBAL DARK THEME */
+html, body, #root {
+  height: 100%;
+  background: #000;
+  color: #fff;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- HEADER (floating logo + title) ---------- */
+.header-float {
+  position: absolute;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-direction: column;
+  text-align: center;
+  pointer-events: none; /* purely decorative */
+}
+
+.header-float .logo-wrap {
+  width: 110px;
+  height: 110px;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle at 50% 70%,
+    rgba(255,255,255,0.15),
+    rgba(255,255,255,0.04)
+  );
+  box-shadow:
+    0 0 60px rgba(255,255,255,0.15),
+    0 0 120px rgba(255,255,255,0.12),
+    inset 0 0 40px rgba(255,255,255,0.06);
+  animation: glowPulseLogo 4s ease-in-out infinite;
+}
+
+.header-float .logo-wrap img {
+  width: 76px;
+  height: 76px;
+  transform: translateY(16px); /* move DOWN */
+  filter: drop-shadow(0 0 25px rgba(255,255,255,0.5));
+}
+
+@keyframes glowPulseLogo {
+  0%   { box-shadow: 0 0 55px rgba(255,255,255,0.15),
+                    0 0 110px rgba(255,255,255,0.12); }
+  50%  { box-shadow: 0 0 85px rgba(255,255,255,0.22),
+                    0 0 150px rgba(255,255,255,0.20); }
+  100% { box-shadow: 0 0 55px rgba(255,255,255,0.15),
+                    0 0 110px rgba(255,255,255,0.12); }
+}
+
+/* glowing ring */
+.header-float .logo-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.06) 0%, transparent 35%);
+  filter: blur(18px);
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+/* company name + tagline */
+.header-float .company {
+  font-family: "Inter", sans-serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: rgba(255,255,255,0.95);
+}
+
+.header-float .product {
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: rgba(255,255,255,0.75);
+}
+/* ---------- EDITOR PANEL (Option A: soft grey) ---------- */
+.editor-panel {
+  background: rgba(255,255,255,0.06);
+  border: 1.4px solid rgba(255,255,255,0.14);
+  border-radius: 24px;
+  box-shadow:
+    0 8px 40px rgba(0,0,0,0.7),
+    0 0 80px rgba(255,255,255,0.06),
+    inset 0 0 40px rgba(255,255,255,0.03);
+}
+
+
+/* ProseMirror container override to look lighter inside the panel */
+.editor-panel .ProseMirror {
+  background: transparent;
+   padding: 50px 16px;     /* <-- Horizontal + vertical padding */
+  padding: 0;
+  min-height: 260px;
+  color: rgba(255,255,255,0.95);
+  outline: none;
+  border-radius: 12px;    /* optional: soft inner rounding */
+  box-sizing: border-box; /* ensures padding doesn't break layout */
+}
+
+/* ---------- BUTTON HELPERS (morph + glow) ---------- */
+/* the "pill" base for the button (we'll use tailwind + these classes) */
+.glow-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 14px;
+  padding: 0.6rem 1.05rem;
+  font-weight: 600;
+  box-shadow: 0 6px 30px rgba(255,255,255,0.03);
+  transition: all 240ms cubic-bezier(.2,.9,.3,1);
+  background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
+  color: white;
+}
+
+/* ring glow around button */
+.glow-btn::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%);
+  filter: blur(25px);
+  opacity: 0.9;
+  transition: opacity 200ms ease;
+}
+
+/* active glow */
+.glow-btn.glow-on::before {
+  opacity: 1;
+  animation: glowPulse 1.6s ease-out;
+}
+
+/* morph target (when loading) */
+.glow-btn.is-loading {
+  padding-left: 0.35rem;
+  padding-right: 0.35rem;
+  width: 3rem; /* shrinks visually; transition handled by tailwind/anim */
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+/* spinner styling inside circular button */
+.glow-btn .btn-spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,0.12);
+  border-top-color: white;
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* position button bottom-right inside panel */
+.panel-action {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  z-index: 8;
+  pointer-events: auto;
+}
+
+/* status messages bottom-left */
+.panel-status {
+  position: absolute;
+  left: 24px;
+  bottom: 20px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.82);
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  min-height: 20px;
+  pointer-events: none;
+}
+
+/* subtle pill for statuses */
+.panel-status .status-pill {
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.9);
+}
+
+/* reduce pointer events on entire app-card so the floating header feels separate */
+.app-card {
+  position: relative;
+  overflow: visible;
+  margin-top: 250px;
+  margin-left: 200px ;
+  margin-right: 200px;
+  margin-bottom: -100px;
+}
+
+.glow-box {
+  border: 1.6px solid rgba(255,255,255,0.12) !important;
+  box-shadow:
+    0 0 60px rgba(255,255,255,0.09),
+    0 0 120px rgba(255,255,255,0.05) !important;
+}
+
+/* ensure header sits visually above card */
+.header-float { pointer-events: none; }
+.header-float .logo-wrap { pointer-events: auto; }
+
+
+/* Ensure the editor content has breathing room from the panel edges */
+.editor-panel .ProseMirror {
+  padding: 18px 20px !important;    /* horizontal/vertical breathing room */
+  box-sizing: border-box !important;/* make padding behave */
+  min-height: 220px;                /* keep it roomy */
+  caret-color: #fff !important;
+}
+
+/* make sure first paragraph doesn't pull caret to the very top via negative margins */
+.editor-panel .ProseMirror > * {
+  margin: 0;
+  padding: 0;
+}
+
+/* maintain paragraph spacing but keep top spacing clean */
+.editor-panel .ProseMirror p {
+  margin: 0 0 1rem 0;
+  line-height: 1.75;
+}
+
+/* placeholder stays visible and not pushed into corner */
+.editor-panel .ProseMirror:empty::before {
+  padding-left: 0; /* placeholder uses the container padding already */
+  margin-left: 0;
+  display: block;
+}
+

@@ -1,0 +1,67 @@
+.ProseMirror {
+  position: relative;
+  outline: none;
+  min-height: 200px;
+  color: #fff;
+  caret-color: #fff;
+  font-size: 16px;
+  line-height: 1.6;
+  padding: 1rem;
+}
+
+/* paragraphs */
+.ProseMirror p {
+  margin-bottom: 1em;
+  color: #fff;
+}
+
+/* headings */
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3 {
+  color: #fff;
+  margin: 0.5em 0;
+  font-weight: 700;
+}
+
+/* blockquote */
+.ProseMirror blockquote {
+  border-left: 3px solid rgba(255,255,255,0.15);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+}
+
+/* code */
+.ProseMirror code {
+  background: rgba(255,255,255,0.08);
+  padding: 0.2rem 0.35rem;
+  border-radius: 4px;
+  color: #fff;
+}
+
+/* placeholder */
+.ProseMirror:empty::before {
+  content: attr(data-placeholder);
+  color: rgba(255,255,255,0.28);
+  pointer-events: none;
+}
+
+.ProseMirror {
+  font-size: 18px;
+  line-height: 1.75;
+  color: white;
+  outline: none;
+}
+
+.ProseMirror p {
+  margin-bottom: 1.25rem;
+}
+
+.ProseMirror h1, .ProseMirror h2 {
+  font-weight: 700;
+  margin: 1.8rem 0 1rem 0;
+}
+
