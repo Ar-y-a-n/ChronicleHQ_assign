@@ -1,19 +1,102 @@
-📝 Chronicle AI EditorA specialized text editor enabling seamless AI-assisted writing. Built with React, ProseMirror, and XState, featuring intelligent content completion powered by Google's Gemini 2.0 Flash model.🚀 OverviewThe Chronicle AI Editor is a frontend application that bridges the gap between imperative text editing engines and declarative state management. It provides a "Continue Writing" feature that analyzes the user's current context and generates a natural continuation of the text.Key FeaturesRich Text Editing: Full control over text input using the ProseMirror engine.Deterministic State Logic: Complex UI states (loading, error, success) managed via XState state machines.AI Integration: Real-time text generation using the Gemini 2.0 Flash model.Robust Architecture: Clear separation of concerns between UI (React), Logic (XState), and Editor State (ProseMirror).🏗️ Architecture & Design DecisionsThis project follows a strict separation of concerns to ensure maintainability and testability.1. State Management: Why XState?Instead of scattering isLoading and error booleans across React useState hooks, this project uses a Finite State Machine (FSM).Predictability: The editor cannot trigger a new generation while one is already in progress (idle → loading).Error Handling: Retries and error clearing are handled as explicit state transitions (error → loading).Visualization: The logic is decoupled from the UI, making it easier to visualize and test.Code Insight: See src/machines/aiEditorMachine.ts for the Actor Logic implementation.2. The Editor Engine: Why ProseMirror?ProseMirror was chosen for its robust transaction system. Unlike simple textarea elements, ProseMirror allows us to treat text insertion as a transactional change to the document model.The Bridge: A custom hook useProseMirror (in src/hooks/useProseMirror.ts) initializes the EditorView and manages the imperative API lifecycle within the declarative React component tree.Commands: AI text insertion is handled via a dedicated command insertAIContent, ensuring the undo history and cursor positions are preserved.3. AI Service LayerThe application connects to the Gemini 2.0 Flash model.Prompt Engineering: The prompt is designed as an "Autocomplete Engine" with strict constraints (no repetition, concise output) to ensure the AI feels like a natural extension of the user's thought process.🛠️ Tech StackTechnologyPurposeViteFast build tooling and development server.React 19UI Component library.TypeScriptType safety across the machine context and ProseMirror schema.XState v5State management for the AI request lifecycle.ProseMirrorHeadless rich-text editor framework.Tailwind CSSUtility-first styling for a clean, modern UI.VitestUnit testing for the logic and editor components.💻 Getting StartedPrerequisitesNode.js (v18+)npm or yarnA Google Gemini API KeyInstallationClone the repositorygit clone [https://github.com/yourusername/chronicle-ai-editor.git](https://github.com/yourusername/chronicle-ai-editor.git)
+# 📝 Chronicle AI Editor  
+*A specialized AI-assisted text editor built with React, ProseMirror, and XState — powered by the Gemini 2.0 Flash model.*
+
+---
+
+## 🚀 Overview
+
+The **Chronicle AI Editor** is a frontend application that bridges the gap between **imperative text-editing engines** and **declarative state management**.  
+It provides an intelligent **Continue Writing** feature that analyzes the user’s current writing context and generates a natural continuation.
+
+### 🔑 Key Features
+- **Rich Text Editing** – Full control through the ProseMirror engine.  
+- **Deterministic State Logic** – All UI logic (loading, error, success) handled via XState.  
+- **AI Integration** – Real-time continuation using the Gemini 2.0 Flash model.  
+- **Robust Architecture** – Clear separation between UI (React), logic (XState), and editor state (ProseMirror).
+
+---
+
+## 🏗️ Architecture & Design Decisions
+
+This project follows strict separation of concerns to ensure **maintainability**, **testability**, and **predictability**.
+
+---
+
+### 1. State Management — **Why XState?**
+
+Instead of tracking fragmented UI booleans (isLoading, error) across React components, the editor uses a **Finite State Machine (FSM)**.
+
+#### Benefits:
+- **Predictability**: Cannot trigger a second AI request while one is already in progress.  
+  - *(idle → loading → success/error)*  
+- **Clean Error Handling**: Retries and resets are explicit transitions.  
+- **Visualizable Logic**: State logic is decoupled from the UI.  
+- **Testability**: The FSM is easily unit-testable.
+
+📁 *See:* `src/machines/aiEditorMachine.ts`
+
+---
+
+### 2. Editor Engine — **Why ProseMirror?**
+
+ProseMirror offers a **transaction-based** system that is far more robust than a textarea.
+
+#### Advantages:
+- Each text update is a **transaction**, maintaining:
+  - Undo/redo history  
+  - Proper selection & cursor position  
+- Custom commands allow structured editing operations.
+
+The editor is controlled via a custom hook:
+
+📁 `src/hooks/useProseMirror.ts`  
+🛠️ Command example:  
+- `insertAIContent` – inserts generated text with full transaction support.
+
+---
+
+### 3. AI Service Layer
+
+The app communicates with the **Gemini 2.0 Flash** model.
+
+#### Prompt Engineering Choices:
+- Designed as an **Autocomplete Engine**  
+- Prevents:
+  - Repetition  
+  - Over-long responses  
+  - Style inconsistencies  
+- Produces natural, context-aware continuation.
+
+📁 Implementation: `src/services/geminiService.ts`
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|-----------|---------|
+| **Vite** | Fast dev server & bundler |
+| **React 19** | UI framework |
+| **TypeScript** | Type safety |
+| **XState v5** | AI request state machine |
+| **ProseMirror** | Rich-text editing engine |
+| **Tailwind CSS** | Utility-based styling |
+| **Vitest** | Unit testing |
+
+---
+
+## 💻 Getting Started
+
+### **Prerequisites**
+- Node.js (v18+)
+- npm or yarn
+- Google Gemini API key
+
+---
+
+### **Installation**
+
+```bash
+git clone https://github.com/yourusername/chronicle-ai-editor.git
 cd chronicle-ai-editor
-Install dependenciesnpm install
-Environment SetupCreate a .env file in the root directory:VITE_GEMINI_API_KEY=your_api_key_here
-Run Development Servernpm run dev
-Running TestsTo verify the state machine logic and editor commands:npm run test
-# or
-npx vitest
-📂 Project Structuresrc/
-├── components/       # React UI Components (EditorContainer, Toolbar)
-├── editor/           # ProseMirror Logic
-│   ├── commands/     # Custom commands (e.g., insertAIContent.ts)
-│   ├── config/       # Schema definitions
-│   └── utils/        # Parsing utilities
-├── hooks/            # Custom Hooks (useProseMirror.ts)
-├── machines/         # XState Machine Definitions (aiEditorMachine.ts)
-├── services/         # API Services (geminiService.ts)
-└── styles/           # Tailwind and ProseMirror CSS
-🤖 AI Usage StatementTransparency regarding the development process.This project utilized AI assistance tools (such as GitHub Copilot/ChatGPT) for:Boilerplate Generation: Setting up the initial ProseMirror schema and Vite configuration.Debugging: Troubleshooting specific TypeScript types for ProseMirror's Transaction objects.Prompt Optimization: Refining the Gemini system prompt to reduce hallucination and repetition.All core architectural decisions, specifically the integration of XState with ProseMirror, were manually designed and implemented to meet the assignment's technical requirements.🧪 Future ImprovementsStreaming: Implement streaming responses from Gemini for a "typing" effect.Context Awareness: Expand the prompt to consider the preceding paragraph for better tone matching.Slash Commands: Implement a Notion-style / menu for triggering AI
+npm install
